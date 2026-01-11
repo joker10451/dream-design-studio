@@ -12,6 +12,8 @@ interface CatalogFiltersProps {
   setFilters: React.Dispatch<React.SetStateAction<Filters>>;
   brands: string[];
   categories: { id: string; name: string; count: number }[];
+  protocols: string[];
+  features: string[];
   totalProducts: number;
 }
 
@@ -20,6 +22,8 @@ export function CatalogFilters({
   setFilters,
   brands,
   categories,
+  protocols,
+  features,
   totalProducts,
 }: CatalogFiltersProps) {
   const resetFilters = () => {
@@ -29,6 +33,8 @@ export function CatalogFilters({
       brands: [],
       minRating: 0,
       searchQuery: "",
+      protocols: [],
+      features: [],
     });
   };
 
@@ -41,13 +47,33 @@ export function CatalogFilters({
     }));
   };
 
+  const toggleProtocol = (protocol: string) => {
+    setFilters((prev) => ({
+      ...prev,
+      protocols: prev.protocols.includes(protocol)
+        ? prev.protocols.filter((p) => p !== protocol)
+        : [...prev.protocols, protocol],
+    }));
+  };
+
+  const toggleFeature = (feature: string) => {
+    setFilters((prev) => ({
+      ...prev,
+      features: prev.features.includes(feature)
+        ? prev.features.filter((f) => f !== feature)
+        : [...prev.features, feature],
+    }));
+  };
+
   const hasActiveFilters =
     filters.category !== "all" ||
     filters.priceRange[0] > 0 ||
     filters.priceRange[1] < 50000 ||
     filters.brands.length > 0 ||
     filters.minRating > 0 ||
-    filters.searchQuery !== "";
+    filters.searchQuery !== "" ||
+    filters.protocols.length > 0 ||
+    filters.features.length > 0;
 
   return (
     <motion.div
@@ -162,6 +188,50 @@ export function CatalogFilters({
             >
               {rating === 0 ? "Все" : `${rating}+`}
             </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Protocols */}
+      <div className="p-4 rounded-xl bg-card border border-border">
+        <h3 className="font-semibold mb-4">Протоколы</h3>
+        <div className="space-y-3 max-h-48 overflow-y-auto">
+          {protocols.map((protocol) => (
+            <div key={protocol} className="flex items-center space-x-3">
+              <Checkbox
+                id={`protocol-${protocol}`}
+                checked={filters.protocols.includes(protocol)}
+                onCheckedChange={() => toggleProtocol(protocol)}
+              />
+              <Label
+                htmlFor={`protocol-${protocol}`}
+                className="text-sm text-muted-foreground hover:text-foreground cursor-pointer"
+              >
+                {protocol}
+              </Label>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Features */}
+      <div className="p-4 rounded-xl bg-card border border-border">
+        <h3 className="font-semibold mb-4">Функции</h3>
+        <div className="space-y-3 max-h-48 overflow-y-auto">
+          {features.slice(0, 10).map((feature) => (
+            <div key={feature} className="flex items-center space-x-3">
+              <Checkbox
+                id={`feature-${feature}`}
+                checked={filters.features.includes(feature)}
+                onCheckedChange={() => toggleFeature(feature)}
+              />
+              <Label
+                htmlFor={`feature-${feature}`}
+                className="text-sm text-muted-foreground hover:text-foreground cursor-pointer"
+              >
+                {feature}
+              </Label>
+            </div>
           ))}
         </div>
       </div>

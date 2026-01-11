@@ -1,14 +1,31 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://smarthome2026.ru/sitemap.xml
+
+# Crawl delay for respectful crawling
+Crawl-delay: 1
+
+# Allow all search engines to index the site
 User-agent: Googlebot
+Allow: /
+
+User-agent: Yandex
 Allow: /
 
 User-agent: Bingbot
 Allow: /
 
-User-agent: Twitterbot
-Allow: /
+# Disallow admin and private areas (if any)
+Disallow: /admin/
+Disallow: /api/
+Disallow: /*.json$
 
-User-agent: facebookexternalhit
-Allow: /
-
-User-agent: *
-Allow: /
+# Allow important pages
+Allow: /catalog
+Allow: /calculator
+Allow: /search
+Allow: /guides
+Allow: /news
+Allow: /ratings

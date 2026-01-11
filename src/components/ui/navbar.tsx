@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Home, Grid3X3, BookOpen, Newspaper, Award, FileText } from "lucide-react";
+import { Menu, X, Home, Grid3X3, BookOpen, Newspaper, Award, FileText, Calculator, Search } from "lucide-react";
 import { Button } from "./button";
+import { SearchBar } from "@/components/search/SearchBar";
+import { SearchResult, SearchSuggestion } from "@/types/search";
 
 const navItems = [
   { name: "Главная", href: "/", icon: Home },
   { name: "Каталог", href: "/catalog", icon: Grid3X3 },
+  { name: "Калькулятор", href: "/calculator", icon: Calculator },
   { name: "Гайды", href: "/guides", icon: BookOpen },
   { name: "Новости", href: "/news", icon: Newspaper },
   { name: "Рейтинги", href: "/ratings", icon: Award },
@@ -15,6 +18,22 @@ const navItems = [
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSearch = (results: SearchResult[], query: string) => {
+    navigate(`/search?q=${encodeURIComponent(query)}`);
+    setShowSearch(false);
+  };
+
+  const handleSuggestionClick = (suggestion: SearchSuggestion) => {
+    if (suggestion.type === 'product') {
+      navigate(`/catalog?search=${encodeURIComponent(suggestion.text)}`);
+    } else {
+      navigate(`/search?q=${encodeURIComponent(suggestion.text)}`);
+    }
+    setShowSearch(false);
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
@@ -29,7 +48,7 @@ export function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-1">
             {navItems.map((item) => (
               <Link
                 key={item.name}
@@ -41,8 +60,19 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* CTA Button */}
+          {/* Search and CTA */}
           <div className="hidden md:flex items-center gap-4">
+            {/* Search Toggle */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowSearch(!showSearch)}
+              className="gap-2"
+            >
+              <Search className="w-4 h-4" />
+              <span className="hidden lg:inline">Поиск</span>
+            </Button>
+            
             <Button variant="glow" size="sm">
               Подписаться
             </Button>
@@ -57,6 +87,28 @@ export function Navbar() {
           </button>
         </div>
       </div>
+
+      {/* Search Bar Dropdown */}
+      <AnimatePresence>
+        {showSearch && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="border-t border-border bg-background/95 backdrop-blur-xl"
+          >
+            <div className="container mx-auto px-4 py-4">
+              <SearchBar
+                onSearch={handleSearch}
+                onSuggestionClick={handleSuggestionClick}
+                placeholder="Поиск товаров, статей, новостей..."
+                className="max-w-2xl mx-auto"
+                showPopular={true}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Mobile Navigation */}
       <AnimatePresence>
@@ -85,6 +137,27 @@ export function Navbar() {
                   </Link>
                 </motion.div>
               ))}
+              
+              {/* Mobile Search */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: navItems.length * 0.05 }}
+                className="pt-2"
+              >
+                <SearchBar
+                  onSearch={(results, query) => {
+                    handleSearch(results, query);
+                    setIsOpen(false);
+                  }}
+                  onSuggestionClick={(suggestion) => {
+                    handleSuggestionClick(suggestion);
+                    setIsOpen(false);
+                  }}
+                  placeholder="Поиск..."
+                  showPopular={false}
+                />
+              </motion.div>
               <div className="pt-4">
                 <Button variant="glow" className="w-full">
                   Подписаться

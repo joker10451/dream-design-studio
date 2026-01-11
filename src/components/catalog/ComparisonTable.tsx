@@ -41,8 +41,8 @@ export function ComparisonTable({ products, isCompareMode = false }: ComparisonT
                   <TableHead key={product.id} className="text-center min-w-[200px]">
                     <div className="flex flex-col items-center gap-2">
                       <img
-                        src={product.image}
-                        alt={product.name}
+                        src={product.images[0]?.url}
+                        alt={product.images[0]?.alt || product.name}
                         className="w-16 h-16 object-cover rounded-lg"
                       />
                       <span className="text-xs text-primary">{product.brand}</span>
@@ -86,7 +86,7 @@ export function ComparisonTable({ products, isCompareMode = false }: ComparisonT
                 <TableCell className="font-medium">Протокол</TableCell>
                 {products.map((p) => (
                   <TableCell key={p.id} className="text-center text-sm">
-                    {p.specs.protocol}
+                    {p.specs.protocol.join(", ")}
                   </TableCell>
                 ))}
               </TableRow>
@@ -135,20 +135,16 @@ export function ComparisonTable({ products, isCompareMode = false }: ComparisonT
                 {products.map((p) => (
                   <TableCell key={p.id} className="text-center">
                     <div className="flex flex-col gap-2">
-                      {p.stores.wildberries && (
-                        <Button variant="secondary" size="sm" asChild className="text-xs">
-                          <a href={p.stores.wildberries} target="_blank" rel="noopener noreferrer">
-                            Wildberries <ExternalLink className="w-3 h-3 ml-1" />
+                      {p.affiliateLinks.map((link) => (
+                        <Button key={link.id} variant="secondary" size="sm" asChild className="text-xs">
+                          <a href={link.url} target="_blank" rel="noopener noreferrer">
+                            {link.marketplace === 'wildberries' ? 'Wildberries' : 
+                             link.marketplace === 'ozon' ? 'OZON' : 
+                             link.marketplace === 'yandex' ? 'Яндекс.Маркет' : 
+                             link.marketplace} <ExternalLink className="w-3 h-3 ml-1" />
                           </a>
                         </Button>
-                      )}
-                      {p.stores.ozon && (
-                        <Button variant="secondary" size="sm" asChild className="text-xs">
-                          <a href={p.stores.ozon} target="_blank" rel="noopener noreferrer">
-                            OZON <ExternalLink className="w-3 h-3 ml-1" />
-                          </a>
-                        </Button>
-                      )}
+                      ))}
                     </div>
                   </TableCell>
                 ))}
@@ -185,8 +181,8 @@ export function ComparisonTable({ products, isCompareMode = false }: ComparisonT
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <img
-                      src={product.image}
-                      alt={product.name}
+                      src={product.images[0]?.url}
+                      alt={product.images[0]?.alt || product.name}
                       className="w-12 h-12 object-cover rounded-lg"
                     />
                     <div>
@@ -203,7 +199,7 @@ export function ComparisonTable({ products, isCompareMode = false }: ComparisonT
                   <span className="text-sm text-primary">{product.brand}</span>
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm">{product.specs.protocol}</span>
+                  <span className="text-sm">{product.specs.protocol.join(", ")}</span>
                 </TableCell>
                 <TableCell className="text-center">
                   <div className="flex items-center justify-center gap-1">
@@ -221,26 +217,20 @@ export function ComparisonTable({ products, isCompareMode = false }: ComparisonT
                 </TableCell>
                 <TableCell>
                   <div className="flex justify-center gap-1">
-                    {product.stores.wildberries && (
+                    {product.affiliateLinks.map((link) => (
                       <a
-                        href={product.stores.wildberries}
+                        key={link.id}
+                        href={link.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="px-2 py-1 text-xs rounded bg-secondary hover:bg-primary hover:text-primary-foreground transition-colors"
                       >
-                        WB
+                        {link.marketplace === 'wildberries' ? 'WB' : 
+                         link.marketplace === 'ozon' ? 'OZ' : 
+                         link.marketplace === 'yandex' ? 'YM' : 
+                         link.marketplace.slice(0, 2).toUpperCase()}
                       </a>
-                    )}
-                    {product.stores.ozon && (
-                      <a
-                        href={product.stores.ozon}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-2 py-1 text-xs rounded bg-secondary hover:bg-primary hover:text-primary-foreground transition-colors"
-                      >
-                        OZ
-                      </a>
-                    )}
+                    ))}
                   </div>
                 </TableCell>
               </TableRow>

@@ -9,12 +9,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LayoutGrid, TableIcon } from "lucide-react";
 import { products, brands, categories } from "@/data/products";
 
+// Extract unique protocols and features from products
+const allProtocols = Array.from(new Set(
+  products.flatMap(p => p.specs.protocol)
+)).sort();
+
+const allFeatures = Array.from(new Set(
+  products.flatMap(p => p.specs.features)
+)).sort();
+
 export interface Filters {
   category: string;
   priceRange: [number, number];
   brands: string[];
   minRating: number;
   searchQuery: string;
+  protocols: string[];
+  features: string[];
 }
 
 const Catalog = () => {
@@ -24,6 +35,8 @@ const Catalog = () => {
     brands: [],
     minRating: 0,
     searchQuery: "",
+    protocols: [],
+    features: [],
   });
 
   const [compareIds, setCompareIds] = useState<string[]>([]);
@@ -50,13 +63,37 @@ const Catalog = () => {
         return false;
       }
 
-      // Search filter
+      // Protocol filter
+      if (filters.protocols.length > 0) {
+        const hasMatchingProtocol = filters.protocols.some(protocol =>
+          product.specs.protocol.some(p => p.toLowerCase().includes(protocol.toLowerCase()))
+        );
+        if (!hasMatchingProtocol) {
+          return false;
+        }
+      }
+
+      // Features filter
+      if (filters.features.length > 0) {
+        const hasMatchingFeature = filters.features.some(feature =>
+          product.specs.features.some(f => f.toLowerCase().includes(feature.toLowerCase()))
+        );
+        if (!hasMatchingFeature) {
+          return false;
+        }
+      }
+
+      // Enhanced search filter
       if (filters.searchQuery) {
         const query = filters.searchQuery.toLowerCase();
         return (
           product.name.toLowerCase().includes(query) ||
           product.brand.toLowerCase().includes(query) ||
-          product.description.toLowerCase().includes(query)
+          product.description.toLowerCase().includes(query) ||
+          product.fullDescription.toLowerCase().includes(query) ||
+          product.specs.features.some(f => f.toLowerCase().includes(query)) ||
+          product.specs.protocol.some(p => p.toLowerCase().includes(query)) ||
+          product.tags.some(t => t.toLowerCase().includes(query))
         );
       }
 
@@ -103,6 +140,8 @@ const Catalog = () => {
                 setFilters={setFilters}
                 brands={brands}
                 categories={categories}
+                protocols={allProtocols}
+                features={allFeatures}
                 totalProducts={filteredProducts.length}
               />
             </aside>

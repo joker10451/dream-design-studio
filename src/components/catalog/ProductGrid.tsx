@@ -1,6 +1,10 @@
 import { motion } from "framer-motion";
 import { Star, Plus, Check, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { OptimizedImage } from "@/components/ui/optimized-image";
+import { ResponsiveGrid } from "@/components/ui/responsive-container";
+import { AffiliateButton } from "@/components/affiliate/AffiliateButton";
+import { useAffiliateTracking } from "@/components/affiliate/AffiliateTracker";
 import type { Product } from "@/data/products";
 
 interface ProductGridProps {
@@ -23,6 +27,12 @@ const itemVariants = {
 };
 
 export function ProductGrid({ products, compareIds, onToggleCompare }: ProductGridProps) {
+  const { trackClick } = useAffiliateTracking();
+
+  const handleAffiliateClick = (link: any, productId: string) => {
+    trackClick(link, 'catalog_grid', productId);
+  };
+
   if (products.length === 0) {
     return (
       <div className="text-center py-16">
@@ -35,11 +45,10 @@ export function ProductGrid({ products, compareIds, onToggleCompare }: ProductGr
   }
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
+    <ResponsiveGrid
+      cols={{ xs: 1, sm: 2, lg: 3 }}
+      gap="lg"
+      className="w-full"
     >
       {products.map((product) => {
         const isComparing = compareIds.includes(product.id);
@@ -51,6 +60,8 @@ export function ProductGrid({ products, compareIds, onToggleCompare }: ProductGr
           <motion.div
             key={product.id}
             variants={itemVariants}
+            initial="hidden"
+            animate="visible"
             whileHover={{ y: -5 }}
             className="group relative rounded-2xl bg-card border border-border overflow-hidden hover:border-primary/50 transition-all duration-300"
           >
@@ -74,12 +85,18 @@ export function ProductGrid({ products, compareIds, onToggleCompare }: ProductGr
               {isComparing ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
             </button>
 
-            {/* Image */}
+            {/* Optimized Image */}
             <div className="relative h-48 overflow-hidden bg-secondary/30">
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              <OptimizedImage
+                src={product.images[0]?.url || '/placeholder.svg'}
+                alt={product.images[0]?.alt || product.name}
+                className="w-full h-full transition-transform duration-500 group-hover:scale-110"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                responsive={{
+                  xs: product.images[0]?.url || '/placeholder.svg',
+                  sm: product.images[0]?.url || '/placeholder.svg',
+                  md: product.images[0]?.url || '/placeholder.svg',
+                }}
               />
             </div>
 
@@ -125,37 +142,21 @@ export function ProductGrid({ products, compareIds, onToggleCompare }: ProductGr
 
               {/* Store Buttons */}
               <div className="flex gap-2">
-                {product.stores.wildberries && (
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    className="flex-1 text-xs"
-                    asChild
-                  >
-                    <a href={product.stores.wildberries} target="_blank" rel="noopener noreferrer">
-                      Wildberries
-                      <ExternalLink className="w-3 h-3 ml-1" />
-                    </a>
-                  </Button>
-                )}
-                {product.stores.ozon && (
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    className="flex-1 text-xs"
-                    asChild
-                  >
-                    <a href={product.stores.ozon} target="_blank" rel="noopener noreferrer">
-                      OZON
-                      <ExternalLink className="w-3 h-3 ml-1" />
-                    </a>
-                  </Button>
-                )}
+                {product.affiliateLinks.slice(0, 2).map((link) => (
+                  <AffiliateButton
+                    key={link.id}
+                    link={link}
+                    variant="compact"
+                    showPrice={false}
+                    className="flex-1"
+                    onClick={(link) => handleAffiliateClick(link, product.id)}
+                  />
+                ))}
               </div>
             </div>
           </motion.div>
         );
       })}
-    </motion.div>
+    </ResponsiveGrid>
   );
 }

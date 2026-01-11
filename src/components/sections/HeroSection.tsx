@@ -1,6 +1,9 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Zap, Shield, Wifi } from "lucide-react";
+import { ArrowRight, Zap, Shield, Wifi, Calculator } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SearchBar } from "@/components/search/SearchBar";
+import { Link, useNavigate } from "react-router-dom";
+import { SearchResult, SearchSuggestion } from "@/types/search";
 
 const features = [
   { icon: Zap, text: "Экономия энергии" },
@@ -9,6 +12,19 @@ const features = [
 ];
 
 export function HeroSection() {
+  const navigate = useNavigate();
+
+  const handleSearch = (results: SearchResult[], query: string) => {
+    navigate(`/search?q=${encodeURIComponent(query)}`);
+  };
+
+  const handleSuggestionClick = (suggestion: SearchSuggestion) => {
+    if (suggestion.type === 'product') {
+      navigate(`/catalog?search=${encodeURIComponent(suggestion.text)}`);
+    } else {
+      navigate(`/search?q=${encodeURIComponent(suggestion.text)}`);
+    }
+  };
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Background Effects */}
@@ -92,6 +108,22 @@ export function HeroSection() {
             ))}
           </motion.div>
 
+          {/* Search Bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.35 }}
+            className="max-w-2xl mx-auto mb-8"
+          >
+            <SearchBar
+              onSearch={handleSearch}
+              onSuggestionClick={handleSuggestionClick}
+              placeholder="Найти товары, статьи, новости..."
+              className="w-full"
+              showPopular={true}
+            />
+          </motion.div>
+
           {/* CTA Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -99,12 +131,17 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <Button variant="glow" size="lg" className="group">
-              Каталог устройств
-              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+            <Button variant="glow" size="lg" className="group" asChild>
+              <Link to="/catalog">
+                Каталог устройств
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Link>
             </Button>
-            <Button variant="outline" size="lg">
-              Читать гайды
+            <Button variant="outline" size="lg" className="group" asChild>
+              <Link to="/calculator">
+                <Calculator className="w-4 h-4 mr-2" />
+                Калькулятор стоимости
+              </Link>
             </Button>
           </motion.div>
 

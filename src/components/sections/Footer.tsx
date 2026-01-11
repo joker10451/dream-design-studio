@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Home, Mail, MessageCircle, Youtube, Instagram } from "lucide-react";
+import { NewsletterFormCompact } from "@/components/newsletter";
 
 const footerLinks = {
   catalog: [
@@ -46,6 +47,17 @@ export function Footer() {
             <p className="text-sm text-muted-foreground mb-6">
               Всё об умном доме в России. Обзоры, рейтинги и гайды по IoT устройствам.
             </p>
+            
+            {/* Newsletter Subscription */}
+            <div className="mb-6">
+              <NewsletterFormCompact
+                source="footer"
+                title="Подписка на новости"
+                description="Получайте лучшие статьи и обзоры каждую неделю"
+                placeholder="Ваш email"
+                buttonText="Подписаться"
+              />
+            </div>
             
             {/* Social Links */}
             <div className="flex items-center gap-3">
