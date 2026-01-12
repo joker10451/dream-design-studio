@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Smart Home 2026 - Новости и статьи об умном доме</title>
+    <description><![CDATA[Последние новости, обзоры, гайды и рейтинги устройств умного дома в России. Экспертные материалы для создания идеального умного дома.]]></description>
+    <link>https://smarthome2026.ru</link>
+    <atom:link href="https://smarthome2026.ru/rss.xml" rel="self" type="application/rss+xml" />
+    <language>ru-RU</language>
+    <copyright>© 2026 Smart Home 2026. Все права защищены.</copyright>
+    <managingEditor>info@smarthome2026.ru (Smart Home 2026)</managingEditor>
+    <webMaster>webmaster@smarthome2026.ru (Smart Home 2026)</webMaster>
+    <lastBuildDate>Sun, 11 Jan 2026 00:00:00 GMT</lastBuildDate>
+    <pubDate>Sun, 11 Jan 2026 23:28:17 GMT</pubDate>
+    <ttl>60</ttl>
+    <generator>Smart Home 2026 RSS Generator</generator>
+    <category>Technology</category>
+    <category>Smart Home</category>
+    <category>IoT</category>
+    <category>Reviews</category>
+    <category>Guides</category>
+    <image>
+      <url>https://smarthome2026.ru/images/logo.png</url>
+      <title>Smart Home 2026 - Новости и статьи об умном доме</title>
+      <link>https://smarthome2026.ru</link>
+      <width>144</width>
+      <height>144</height>
+      <description>Логотип Smart Home 2026</description>
+    </image>
+
+    <item>
+      <title>Яндекс анонсировал новую линейку умных устройств на 2026 год</title>
+      <description><![CDATA[Компания Яндекс представила обновленную линейку устройств для умного дома, включая новые датчики и камеры безопасности.]]></description>
+      <link>https://smarthome2026.ru/news/yandex-new-smart-devices-2026</link>
+      <guid isPermaLink="true">https://smarthome2026.ru/news/yandex-new-smart-devices-2026</guid>
+      <pubDate>Sun, 11 Jan 2026 00:00:00 GMT</pubDate>
+      <category>Продукты</category>
+      <author>alexey@smarthome2026.ru (Алексей Смирнов)</author>
+      <enclosure url="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=400&fit=crop" type="image/jpeg" length="0" />
+    </item>
+    <item>
+      <title>Полный гайд по выбору умных розеток в 2026 году</title>
+      <description><![CDATA[Подробное руководство по выбору умных розеток: протоколы, функции, совместимость с экосистемами. Сравнение популярных моделей.]]></description>
+      <link>https://smarthome2026.ru/guides/guide-smart-sockets-2026</link>
+      <guid isPermaLink="true">https://smarthome2026.ru/guides/guide-smart-sockets-2026</guid>
+      <pubDate>Sat, 10 Jan 2026 00:00:00 GMT</pubDate>
+      <category>Гайды</category>
+      <author>alexey@smarthome2026.ru (Алексей Смирнов)</author>
+      <enclosure url="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=400&fit=crop" type="image/jpeg" length="0" />
+    </item>
+    <item>
+      <title>Xiaomi запускает программу trade-in для умных устройств</title>
+      <description><![CDATA[Xiaomi объявила о запуске программы обмена старых умных устройств на новые с выгодой до 30%.]]></description>
+      <link>https://smarthome2026.ru/news/xiaomi-trade-in-program</link>
+      <guid isPermaLink="true">https://smarthome2026.ru/news/xiaomi-trade-in-program</guid>
+      <pubDate>Fri, 09 Jan 2026 00:00:00 GMT</pubDate>
+      <category>Индустрия</category>
+      <author>maria@smarthome2026.ru (Мария Петрова)</author>
+      <enclosure url="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800&h=400&fit=crop" type="image/jpeg" length="0" />
+    </item>
+    <item>
+      <title>Обзор Яндекс Розетки: стоит ли покупать в 2026?</title>
+      <description><![CDATA[Детальный обзор Яндекс Розетки: функции, производительность, интеграция с Алисой. Плюсы, минусы и альтернативы.]]></description>
+      <link>https://smarthome2026.ru/guides/yandex-socket-review-2026</link>
+      <guid isPermaLink="true">https://smarthome2026.ru/guides/yandex-socket-review-2026</guid>
+      <pubDate>Thu, 08 Jan 2026 00:00:00 GMT</pubDate>
+      <category>Обзоры</category>
+      <author>maria@smarthome2026.ru (Мария Петрова)</author>
+      <enclosure url="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=400&fit=crop" type="image/jpeg" length="0" />
+    </item>
+    <item>
+      <title>ТОП-10 лучших умных розеток 2026 года</title>
+      <description><![CDATA[Рейтинг лучших умных розеток по итогам тестирования: от бюджетных до премиальных моделей.]]></description>
+      <link>https://smarthome2026.ru/ratings/top-10-smart-sockets-2026</link>
+      <guid isPermaLink="true">https://smarthome2026.ru/ratings/top-10-smart-sockets-2026</guid>
+      <pubDate>Wed, 07 Jan 2026 00:00:00 GMT</pubDate>
+      <category>Рейтинги</category>
+      <author>maria@smarthome2026.ru (Мария Петрова)</author>
+      <enclosure url="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=400&fit=crop" type="image/jpeg" length="0" />
+    </item>
+    <item>
+      <title>Сравнение экосистем умного дома: Яндекс vs Xiaomi vs Apple</title>
+      <description><![CDATA[Детальное сравнение популярных экосистем умного дома: функции, совместимость, цены. Какую выбрать в 2026 году?]]></description>
+      <link>https://smarthome2026.ru/guides/smart-home-ecosystems-comparison</link>
+      <guid isPermaLink="true">https://smarthome2026.ru/guides/smart-home-ecosystems-comparison</guid>
+      <pubDate>Mon, 05 Jan 2026 00:00:00 GMT</pubDate>
+      <category>Сравнения</category>
+      <author>alexey@smarthome2026.ru (Алексей Смирнов)</author>
+      <enclosure url="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=400&fit=crop" type="image/jpeg" length="0" />
+    </item>
+  </channel>
+</rss>

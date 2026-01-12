@@ -12,7 +12,7 @@ interface PerformanceMonitorProps {
 }
 
 export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({ 
-  show = process.env.NODE_ENV === 'development' 
+  show = import.meta.env.DEV 
 }) => {
   const { metrics, isLoading } = usePerformance();
   const { resources, slowResources, totalResourceSize, resourceCount } = useResourceTiming();

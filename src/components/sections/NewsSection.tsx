@@ -82,7 +82,7 @@ export function NewsSection() {
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
-              
+
               {/* Trending Badge */}
               {featuredNews.trending && (
                 <div className="absolute top-4 left-4">
@@ -113,7 +113,7 @@ export function NewsSection() {
           <div className="space-y-6">
             {otherNews.map((item, index) => (
               <motion.article
-                key={index}
+                key={item.title}
                 initial={{ opacity: 0, x: 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}

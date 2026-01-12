@@ -426,7 +426,7 @@ describe('Property-Based Tests for Content System', () => {
        * Validates: Requirements 7.4
        */
       fc.assert(fc.property(
-        fc.date({ min: new Date('2020-01-01'), max: new Date('2030-12-31') }),
+        fc.date({ min: new Date('2020-01-01'), max: new Date('2030-12-31') }).filter(d => !isNaN(d.getTime())),
         fc.constantFrom('short', 'long', 'relative'),
         (date: Date, format: 'short' | 'long' | 'relative') => {
           const formattedDate = formatDate(date, format);

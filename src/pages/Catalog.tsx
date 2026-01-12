@@ -8,6 +8,9 @@ import { ComparisonTable } from "@/components/catalog/ComparisonTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LayoutGrid, TableIcon } from "lucide-react";
 import { products, brands, categories } from "@/data/products";
+import { useProducts } from "@/hooks/api/useProducts";
+import { SEOHead } from "@/components/seo/SEOHead";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 
 // Extract unique protocols and features from products
 const allProtocols = Array.from(new Set(
@@ -41,65 +44,11 @@ const Catalog = () => {
 
   const [compareIds, setCompareIds] = useState<string[]>([]);
 
-  const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      // Category filter
-      if (filters.category !== "all" && product.category !== filters.category) {
-        return false;
-      }
-
-      // Price filter
-      if (product.price < filters.priceRange[0] || product.price > filters.priceRange[1]) {
-        return false;
-      }
-
-      // Brand filter
-      if (filters.brands.length > 0 && !filters.brands.includes(product.brand)) {
-        return false;
-      }
-
-      // Rating filter
-      if (product.rating < filters.minRating) {
-        return false;
-      }
-
-      // Protocol filter
-      if (filters.protocols.length > 0) {
-        const hasMatchingProtocol = filters.protocols.some(protocol =>
-          product.specs.protocol.some(p => p.toLowerCase().includes(protocol.toLowerCase()))
-        );
-        if (!hasMatchingProtocol) {
-          return false;
-        }
-      }
-
-      // Features filter
-      if (filters.features.length > 0) {
-        const hasMatchingFeature = filters.features.some(feature =>
-          product.specs.features.some(f => f.toLowerCase().includes(feature.toLowerCase()))
-        );
-        if (!hasMatchingFeature) {
-          return false;
-        }
-      }
-
-      // Enhanced search filter
-      if (filters.searchQuery) {
-        const query = filters.searchQuery.toLowerCase();
-        return (
-          product.name.toLowerCase().includes(query) ||
-          product.brand.toLowerCase().includes(query) ||
-          product.description.toLowerCase().includes(query) ||
-          product.fullDescription.toLowerCase().includes(query) ||
-          product.specs.features.some(f => f.toLowerCase().includes(query)) ||
-          product.specs.protocol.some(p => p.toLowerCase().includes(query)) ||
-          product.tags.some(t => t.toLowerCase().includes(query))
-        );
-      }
-
-      return true;
-    });
-  }, [filters]);
+  /* 
+   * Switched to DB-driven Catalog
+   */
+  const { data: productsData, isLoading } = useProducts(filters as any);
+  const filteredProducts = productsData?.data || [];
 
   const compareProducts = useMemo(() => {
     return products.filter((p) => compareIds.includes(p.id));
@@ -111,12 +60,53 @@ const Catalog = () => {
     );
   };
 
+  // SEO данные для каталога
+  const currentCategory = categories.find(cat => cat.id === filters.category);
+  const categoryName = currentCategory?.name || 'Все категории';
+
+  const seoTitle = filters.category === 'all'
+    ? 'Каталог устройств умного дома - Smart Home 2026'
+    : `${categoryName} - каталог устройств умного дома`;
+
+  const seoDescription = filters.category === 'all'
+    ? `Каталог из ${products.length} устройств умного дома. Сравнивайте характеристики, читайте отзывы и находите лучшие цены на Wildberries и OZON.`
+    : `${categoryName} для умного дома. ${filteredProducts.length} устройств с подробными характеристиками и актуальными ценами.`;
+
+  const breadcrumbItems = [
+    { name: 'Каталог', url: '/catalog' }
+  ];
+
+  if (filters.category !== 'all' && currentCategory) {
+    breadcrumbItems.push({
+      name: currentCategory.name,
+      url: `/catalog?category=${filters.category}`
+    });
+  }
+
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title={seoTitle}
+        description={seoDescription}
+        keywords={[
+          'каталог умный дом',
+          'устройства iot',
+          'умные розетки',
+          'сравнение устройств',
+          'цены wildberries',
+          'цены ozon',
+          categoryName.toLowerCase()
+        ]}
+        canonicalUrl={`https://smarthome2026.ru/catalog${filters.category !== 'all' ? `?category=${filters.category}` : ''}`}
+      />
+
       <Navbar />
-      
+
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
+          {/* Breadcrumbs */}
+          <Breadcrumbs items={breadcrumbItems} className="mb-6" />
+
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -127,7 +117,7 @@ const Catalog = () => {
               Каталог <span className="text-gradient">устройств</span>
             </h1>
             <p className="text-muted-foreground max-w-2xl">
-              Более 400 устройств умного дома. Сравнивайте характеристики, 
+              Более 400 устройств умного дома. Сравнивайте характеристики,
               читайте отзывы и находите лучшие цены на Wildberries и OZON
             </p>
           </motion.div>
@@ -153,7 +143,7 @@ const Catalog = () => {
                   <p className="text-sm text-muted-foreground">
                     Найдено: <span className="text-foreground font-medium">{filteredProducts.length}</span> устройств
                   </p>
-                  
+
                   <div className="flex items-center gap-4">
                     {compareIds.length > 0 && (
                       <span className="text-sm text-primary">

@@ -4,14 +4,7 @@ import { analytics } from '@/lib/analytics';
 import { CookieConsent } from '@/types/analytics';
 
 export function useAnalytics() {
-  let location;
-  
-  try {
-    location = useLocation();
-  } catch (error) {
-    // useLocation is not available outside of Router context
-    location = null;
-  }
+  const location = useLocation();
 
   // Track page views automatically
   useEffect(() => {

@@ -1,4 +1,5 @@
 // Service Worker registration and management utilities
+import { logger } from './logger';
 
 export interface ServiceWorkerConfig {
   onUpdate?: (registration: ServiceWorkerRegistration) => void;
@@ -27,7 +28,7 @@ export function registerServiceWorker(config?: ServiceWorkerConfig) {
       if (isLocalhost) {
         checkValidServiceWorker(swUrl, config);
         navigator.serviceWorker.ready.then(() => {
-          console.log(
+          logger.log(
             'This web app is being served cache-first by a service worker.'
           );
         });
@@ -50,14 +51,14 @@ function registerValidServiceWorker(swUrl: string, config?: ServiceWorkerConfig)
         installingWorker.onstatechange = () => {
           if (installingWorker.state === 'installed') {
             if (navigator.serviceWorker.controller) {
-              console.log(
+              logger.log(
                 'New content is available and will be used when all tabs for this page are closed.'
               );
               if (config && config.onUpdate) {
                 config.onUpdate(registration);
               }
             } else {
-              console.log('Content is cached for offline use.');
+              logger.log('Content is cached for offline use.');
               if (config && config.onSuccess) {
                 config.onSuccess(registration);
               }
@@ -67,7 +68,7 @@ function registerValidServiceWorker(swUrl: string, config?: ServiceWorkerConfig)
       };
     })
     .catch((error) => {
-      console.error('Error during service worker registration:', error);
+      logger.error('Error during service worker registration:', error);
       if (config && config.onError) {
         config.onError(error);
       }
@@ -94,7 +95,7 @@ function checkValidServiceWorker(swUrl: string, config?: ServiceWorkerConfig) {
       }
     })
     .catch(() => {
-      console.log('No internet connection found. App is running in offline mode.');
+      logger.log('No internet connection found. App is running in offline mode.');
     });
 }
 
@@ -105,7 +106,7 @@ export function unregisterServiceWorker() {
         registration.unregister();
       })
       .catch((error) => {
-        console.error(error.message);
+        logger.error(error.message);
       });
   }
 }
@@ -133,17 +134,16 @@ export function addNetworkListener(
 }
 
 // Utility to show update available notification
+// Теперь уведомления обрабатываются через компонент ServiceWorkerUpdate
 export function showUpdateAvailableNotification(
   registration: ServiceWorkerRegistration
 ) {
-  // This can be integrated with your notification system
-  const updateAvailable = confirm(
-    'Доступно обновление приложения. Обновить сейчас?'
-  );
-  
-  if (updateAvailable && registration.waiting) {
-    registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-    window.location.reload();
+  // Отправляем событие, которое будет обработано компонентом ServiceWorkerUpdate
+  if (registration.waiting) {
+    const event = new CustomEvent('sw-update-available', {
+      detail: { registration }
+    });
+    window.dispatchEvent(event);
   }
 }
 

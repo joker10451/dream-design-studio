@@ -1,12 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Package, 
-  FileText, 
-  Newspaper, 
-  Star, 
-  Calendar, 
-  User, 
+import {
+  Package,
+  FileText,
+  Newspaper,
+  Star,
+  Calendar,
+  User,
   ExternalLink,
   TrendingUp,
   Filter
@@ -73,7 +73,7 @@ export function SearchResults({
 
   const handleResultClick = (result: SearchResult) => {
     onResultClick?.(result);
-    
+
     // Открываем ссылку
     if (result.url.startsWith('http')) {
       window.open(result.url, '_blank', 'noopener,noreferrer');
@@ -145,7 +145,7 @@ export function SearchResults({
               Найдено {results.length} результатов по запросу "{query}"
             </p>
           </div>
-          
+
           {/* Статистика по типам */}
           <div className="flex items-center gap-2">
             {typeStats.map(({ type, count, label }) => {
@@ -166,7 +166,7 @@ export function SearchResults({
         {results.map((result, index) => {
           const Icon = typeIcons[result.type];
           const typeColor = typeColors[result.type];
-          
+
           return (
             <motion.div
               key={result.id}
@@ -175,7 +175,7 @@ export function SearchResults({
               transition={{ duration: 0.3, delay: index * 0.05 }}
             >
               <Card className="hover:shadow-md transition-shadow cursor-pointer group">
-                <CardContent 
+                <CardContent
                   className="p-6"
                   onClick={() => handleResultClick(result)}
                 >
@@ -190,7 +190,7 @@ export function SearchResults({
                         />
                       </div>
                     )}
-                    
+
                     {/* Основной контент */}
                     <div className="flex-1 min-w-0">
                       {/* Заголовок и тип */}
@@ -205,11 +205,11 @@ export function SearchResults({
                           {typeLabels[result.type]}
                         </Badge>
                       </div>
-                      
+
                       {/* Описание */}
                       <div className="mb-3">
                         {result.highlightedText ? (
-                          <p 
+                          <p
                             className="text-muted-foreground line-clamp-2"
                             dangerouslySetInnerHTML={{ __html: result.highlightedText }}
                           />
@@ -219,7 +219,7 @@ export function SearchResults({
                           </p>
                         )}
                       </div>
-                      
+
                       {/* Метаданные */}
                       <div className="flex items-center gap-4 text-sm text-muted-foreground">
                         {/* Категория */}
@@ -227,7 +227,7 @@ export function SearchResults({
                           <Filter className="w-3 h-3" />
                           <span>{result.category}</span>
                         </div>
-                        
+
                         {/* Дата публикации */}
                         {result.publishedAt && (
                           <div className="flex items-center gap-1">
@@ -235,7 +235,7 @@ export function SearchResults({
                             <span>{formatDate(result.publishedAt)}</span>
                           </div>
                         )}
-                        
+
                         {/* Цена для товаров */}
                         {result.price && (
                           <div className="flex items-center gap-1 font-semibold text-primary">
@@ -243,7 +243,7 @@ export function SearchResults({
                             <span>{formatPrice(result.price)}</span>
                           </div>
                         )}
-                        
+
                         {/* Рейтинг для товаров */}
                         {result.rating && (
                           <div className="flex items-center gap-1">
@@ -251,7 +251,7 @@ export function SearchResults({
                             <span>{result.rating}</span>
                           </div>
                         )}
-                        
+
                         {/* Релевантность */}
                         <div className="flex items-center gap-1 ml-auto">
                           <span className="text-xs">
@@ -259,12 +259,12 @@ export function SearchResults({
                           </span>
                         </div>
                       </div>
-                      
+
                       {/* Теги */}
                       {result.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-3">
-                          {result.tags.slice(0, 3).map((tag, tagIndex) => (
-                            <Badge key={tagIndex} variant="secondary" className="text-xs">
+                          {result.tags.slice(0, 3).map((tag) => (
+                            <Badge key={tag} variant="secondary" className="text-xs">
                               {tag}
                             </Badge>
                           ))}
@@ -276,7 +276,7 @@ export function SearchResults({
                         </div>
                       )}
                     </div>
-                    
+
                     {/* Кнопка перехода */}
                     <div className="flex-shrink-0">
                       <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -290,7 +290,7 @@ export function SearchResults({
           );
         })}
       </div>
-      
+
       {/* Показать больше результатов */}
       {results.length > 10 && (
         <div className="text-center pt-6">

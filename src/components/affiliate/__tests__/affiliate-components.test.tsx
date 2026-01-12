@@ -1,9 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import { AffiliateButton } from '../AffiliateButton';
 import { AffiliateDisclosure } from '../AffiliateDisclosure';
 import { useAffiliateTracking } from '../AffiliateTracker';
 import { AffiliateLink } from '@/data/products';
+
+// Test wrapper with Router context
+const TestWrapper = ({ children }: { children: React.ReactNode }) => (
+  <BrowserRouter>
+    {children}
+  </BrowserRouter>
+);
 
 // Mock the tracking hook
 vi.mock('../AffiliateTracker', () => ({
@@ -14,6 +22,16 @@ vi.mock('../AffiliateTracker', () => ({
     getConversionStats: vi.fn(() => ({ total: 0, totalAmount: 0, byMarketplace: {} }))
   })),
   AffiliateTracker: ({ children }: { children: React.ReactNode }) => children
+}));
+
+// Mock analytics hook
+vi.mock('@/hooks/useAnalytics', () => ({
+  useAnalytics: vi.fn(() => ({
+    trackEvent: vi.fn(),
+    trackPageView: vi.fn(),
+    trackConversion: vi.fn(),
+    trackAffiliateClick: vi.fn()
+  }))
 }));
 
 // Mock window.open
@@ -40,7 +58,11 @@ describe('Affiliate Components', () => {
 
   describe('AffiliateButton', () => {
     it('renders affiliate button with correct marketplace name', () => {
-      render(<AffiliateButton link={mockAffiliateLink} />);
+      render(
+        <TestWrapper>
+          <AffiliateButton link={mockAffiliateLink} />
+        </TestWrapper>
+      );
       
       expect(screen.getByText(/Купить на Wildberries/i)).toBeInTheDocument();
       expect(screen.getByText(/1 500₽/i)).toBeInTheDocument();
@@ -55,12 +77,16 @@ describe('Affiliate Components', () => {
         getConversionStats: vi.fn()
       });
 
-      render(<AffiliateButton link={mockAffiliateLink} />);
+      render(
+        <TestWrapper>
+          <AffiliateButton link={mockAffiliateLink} />
+        </TestWrapper>
+      );
       
       const button = screen.getByRole('button');
       fireEvent.click(button);
 
-      expect(mockTrackClick).toHaveBeenCalledWith(mockAffiliateLink);
+      expect(mockTrackClick).toHaveBeenCalledWith(mockAffiliateLink, 'button_click', mockAffiliateLink.id);
       expect(mockWindowOpen).toHaveBeenCalledWith(
         mockAffiliateLink.url,
         '_blank',
@@ -70,11 +96,13 @@ describe('Affiliate Components', () => {
 
     it('renders compact variant correctly', () => {
       render(
-        <AffiliateButton 
-          link={mockAffiliateLink} 
-          variant="compact" 
-          showPrice={true}
-        />
+        <TestWrapper>
+          <AffiliateButton 
+            link={mockAffiliateLink} 
+            variant="compact" 
+            showPrice={true}
+          />
+        </TestWrapper>
       );
       
       expect(screen.getByText('Wildberries')).toBeInTheDocument();
@@ -83,10 +111,12 @@ describe('Affiliate Components', () => {
 
     it('renders minimal variant correctly', () => {
       render(
-        <AffiliateButton 
-          link={mockAffiliateLink} 
-          variant="minimal"
-        />
+        <TestWrapper>
+          <AffiliateButton 
+            link={mockAffiliateLink} 
+            variant="minimal"
+          />
+        </TestWrapper>
       );
       
       expect(screen.getByText('Wildberries')).toBeInTheDocument();
@@ -96,7 +126,11 @@ describe('Affiliate Components', () => {
     it('disables button when link is not available', () => {
       const unavailableLink = { ...mockAffiliateLink, isAvailable: false };
       
-      render(<AffiliateButton link={unavailableLink} />);
+      render(
+        <TestWrapper>
+          <AffiliateButton link={unavailableLink} />
+        </TestWrapper>
+      );
       
       const button = screen.getByRole('button');
       expect(button).toBeDisabled();
@@ -106,10 +140,12 @@ describe('Affiliate Components', () => {
       const mockOnClick = vi.fn();
       
       render(
-        <AffiliateButton 
-          link={mockAffiliateLink} 
-          onClick={mockOnClick}
-        />
+        <TestWrapper>
+          <AffiliateButton 
+            link={mockAffiliateLink} 
+            onClick={mockOnClick}
+          />
+        </TestWrapper>
       );
       
       const button = screen.getByRole('button');
@@ -152,10 +188,18 @@ describe('Affiliate Components', () => {
       const ozonLink = { ...mockAffiliateLink, marketplace: 'ozon' };
       const yandexLink = { ...mockAffiliateLink, marketplace: 'yandex' };
 
-      const { rerender } = render(<AffiliateButton link={ozonLink} />);
+      const { rerender } = render(
+        <TestWrapper>
+          <AffiliateButton link={ozonLink} />
+        </TestWrapper>
+      );
       expect(screen.getByText(/OZON/i)).toBeInTheDocument();
 
-      rerender(<AffiliateButton link={yandexLink} />);
+      rerender(
+        <TestWrapper>
+          <AffiliateButton link={yandexLink} />
+        </TestWrapper>
+      );
       expect(screen.getByText(/Яндекс.Маркет/i)).toBeInTheDocument();
     });
   });
@@ -164,7 +208,11 @@ describe('Affiliate Components', () => {
     it('formats prices correctly with Russian locale', () => {
       const expensiveLink = { ...mockAffiliateLink, price: 123456 };
       
-      render(<AffiliateButton link={expensiveLink} showPrice={true} />);
+      render(
+        <TestWrapper>
+          <AffiliateButton link={expensiveLink} showPrice={true} />
+        </TestWrapper>
+      );
       
       expect(screen.getByText(/123 456₽/i)).toBeInTheDocument();
     });
@@ -180,12 +228,16 @@ describe('Affiliate Components', () => {
         getConversionStats: vi.fn()
       });
 
-      render(<AffiliateButton link={mockAffiliateLink} />);
+      render(
+        <TestWrapper>
+          <AffiliateButton link={mockAffiliateLink} />
+        </TestWrapper>
+      );
       
       const button = screen.getByRole('button');
       fireEvent.click(button);
 
-      expect(mockTrackClick).toHaveBeenCalledWith(mockAffiliateLink);
+      expect(mockTrackClick).toHaveBeenCalledWith(mockAffiliateLink, 'button_click', mockAffiliateLink.id);
     });
 
     it('handles analytics errors gracefully', () => {
@@ -200,7 +252,11 @@ describe('Affiliate Components', () => {
         getConversionStats: vi.fn()
       });
 
-      render(<AffiliateButton link={mockAffiliateLink} />);
+      render(
+        <TestWrapper>
+          <AffiliateButton link={mockAffiliateLink} />
+        </TestWrapper>
+      );
       
       const button = screen.getByRole('button');
       

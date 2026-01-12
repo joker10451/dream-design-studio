@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Smart Home 2026 - Новости и статьи об умном доме</title>
+    <description><![CDATA[Последние новости, обзоры, гайды и рейтинги устройств умного дома в России. Экспертные материалы для создания идеального умного дома.]]></description>
+    <link>https://smarthome2026.ru</link>
+    <atom:link href="https://smarthome2026.ru/rss.xml" rel="self" type="application/rss+xml" />
+    <language>ru-RU</language>
+    <copyright>© 2026 Smart Home 2026. Все права защищены.</copyright>
+    <managingEditor>info@smarthome2026.ru (Smart Home 2026)</managingEditor>
+    <webMaster>webmaster@smarthome2026.ru (Smart Home 2026)</webMaster>
+    <lastBuildDate>Wed, 07 Jan 2026 00:00:00 GMT</lastBuildDate>
+    <pubDate>Sun, 11 Jan 2026 23:28:17 GMT</pubDate>
+    <ttl>60</ttl>
+    <generator>Smart Home 2026 RSS Generator</generator>
+    <category>Technology</category>
+    <category>Smart Home</category>
+    <category>IoT</category>
+    <category>Reviews</category>
+    <category>Guides</category>
+    <image>
+      <url>https://smarthome2026.ru/images/logo.png</url>
+      <title>Smart Home 2026 - Новости и статьи об умном доме</title>
+      <link>https://smarthome2026.ru</link>
+      <width>144</width>
+      <height>144</height>
+      <description>Логотип Smart Home 2026</description>
+    </image>
+
+    <item>
+      <title>ТОП-10 лучших умных розеток 2026 года</title>
+      <description><![CDATA[Рейтинг лучших умных розеток по итогам тестирования: от бюджетных до премиальных моделей.]]></description>
+      <link>https://smarthome2026.ru/ratings/top-10-smart-sockets-2026</link>
+      <guid isPermaLink="true">https://smarthome2026.ru/ratings/top-10-smart-sockets-2026</guid>
+      <pubDate>Wed, 07 Jan 2026 00:00:00 GMT</pubDate>
+      <category>Рейтинги</category>
+      <author>maria@smarthome2026.ru (Мария Петрова)</author>
+      <enclosure url="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=400&fit=crop" type="image/jpeg" length="0" />
+    </item>
+  </channel>
+</rss>

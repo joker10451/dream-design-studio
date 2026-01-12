@@ -103,9 +103,9 @@ export function ComparisonTable({ products, isCompareMode = false }: ComparisonT
                 {products.map((p) => (
                   <TableCell key={p.id} className="text-center">
                     <div className="flex flex-wrap justify-center gap-1">
-                      {p.specs.compatibility.map((c, i) => (
+                      {p.specs.compatibility.map((c) => (
                         <span
-                          key={i}
+                          key={c}
                           className="px-2 py-0.5 text-xs rounded-full bg-secondary text-muted-foreground"
                         >
                           {c}
@@ -120,8 +120,8 @@ export function ComparisonTable({ products, isCompareMode = false }: ComparisonT
                 {products.map((p) => (
                   <TableCell key={p.id} className="text-center">
                     <div className="space-y-1">
-                      {p.specs.features.slice(0, 4).map((f, i) => (
-                        <div key={i} className="flex items-center justify-center gap-1 text-xs">
+                      {p.specs.features.slice(0, 4).map((f) => (
+                        <div key={f} className="flex items-center justify-center gap-1 text-xs">
                           <Check className="w-3 h-3 text-primary" />
                           {f}
                         </div>
@@ -138,10 +138,10 @@ export function ComparisonTable({ products, isCompareMode = false }: ComparisonT
                       {p.affiliateLinks.map((link) => (
                         <Button key={link.id} variant="secondary" size="sm" asChild className="text-xs">
                           <a href={link.url} target="_blank" rel="noopener noreferrer">
-                            {link.marketplace === 'wildberries' ? 'Wildberries' : 
-                             link.marketplace === 'ozon' ? 'OZON' : 
-                             link.marketplace === 'yandex' ? 'Яндекс.Маркет' : 
-                             link.marketplace} <ExternalLink className="w-3 h-3 ml-1" />
+                            {link.marketplace === 'wildberries' ? 'Wildberries' :
+                              link.marketplace === 'ozon' ? 'OZON' :
+                                link.marketplace === 'yandex' ? 'Яндекс.Маркет' :
+                                  link.marketplace} <ExternalLink className="w-3 h-3 ml-1" />
                           </a>
                         </Button>
                       ))}
@@ -225,10 +225,10 @@ export function ComparisonTable({ products, isCompareMode = false }: ComparisonT
                         rel="noopener noreferrer"
                         className="px-2 py-1 text-xs rounded bg-secondary hover:bg-primary hover:text-primary-foreground transition-colors"
                       >
-                        {link.marketplace === 'wildberries' ? 'WB' : 
-                         link.marketplace === 'ozon' ? 'OZ' : 
-                         link.marketplace === 'yandex' ? 'YM' : 
-                         link.marketplace.slice(0, 2).toUpperCase()}
+                        {link.marketplace === 'wildberries' ? 'WB' :
+                          link.marketplace === 'ozon' ? 'OZ' :
+                            link.marketplace === 'yandex' ? 'YM' :
+                              link.marketplace.slice(0, 2).toUpperCase()}
                       </a>
                     ))}
                   </div>

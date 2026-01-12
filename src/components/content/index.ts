@@ -11,3 +11,4 @@ export { ContentFilters } from './ContentFilters';
 export { SocialShareButtons } from './SocialShareButtons';
 export { AffiliateLinksSection } from './AffiliateLinksSection';
 export { RelatedContent } from './RelatedContent';
+export { default as RSSSubscription } from './RSSSubscription';

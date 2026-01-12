@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Home, Mail, MessageCircle, Youtube, Instagram } from "lucide-react";
+import { Home, Mail, MessageCircle, Youtube, Instagram, Rss } from "lucide-react";
 import { NewsletterFormCompact } from "@/components/newsletter";
 
 const footerLinks = {
@@ -10,17 +10,19 @@ const footerLinks = {
     { name: "Датчики", href: "/catalog/datchiki" },
     { name: "Безопасность", href: "/catalog/bezopasnost" },
   ],
-  guides: [
-    { name: "Как выбрать устройство", href: "/guides/kak-vybrat" },
-    { name: "Установка и настройка", href: "/guides/ustanovka" },
-    { name: "Протоколы подключения", href: "/guides/protokoly" },
-    { name: "Экономия энергии", href: "/guides/ekonomiya" },
+  content: [
+    { name: "Гайды", href: "/guides" },
+    { name: "Новости", href: "/news" },
+    { name: "Рейтинги", href: "/ratings" },
+    { name: "Блог", href: "/blog" },
+    { name: "Калькулятор", href: "/calculator" },
   ],
   company: [
     { name: "О проекте", href: "/about" },
     { name: "Контакты", href: "/contacts" },
+    { name: "RSS фиды", href: "/rss" },
     { name: "Политика конфиденциальности", href: "/privacy" },
-    { name: "Раскрытие партнёрства", href: "/disclosure" },
+    { name: "Раскрытие партнёрства", href: "/affiliate-policy" },
   ],
 };
 
@@ -28,6 +30,7 @@ const socialLinks = [
   { name: "Telegram", icon: MessageCircle, href: "#" },
   { name: "YouTube", icon: Youtube, href: "#" },
   { name: "Instagram", icon: Instagram, href: "#" },
+  { name: "RSS", icon: Rss, href: "/rss" },
   { name: "Email", icon: Mail, href: "mailto:info@smarthome2026.ru" },
 ];
 
@@ -91,11 +94,11 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Guides Links */}
+          {/* Content Links */}
           <div>
-            <h3 className="font-semibold mb-4">Гайды</h3>
+            <h3 className="font-semibold mb-4">Контент</h3>
             <ul className="space-y-2.5">
-              {footerLinks.guides.map((link) => (
+              {footerLinks.content.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.href}

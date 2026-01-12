@@ -51,7 +51,7 @@ export function GuidesSection() {
               Популярные <span className="text-gradient">руководства</span>
             </h2>
             <p className="text-muted-foreground max-w-xl">
-              Практические инструкции от экспертов. Узнайте как выбрать, 
+              Практические инструкции от экспертов. Узнайте как выбрать,
               установить и настроить умные устройства
             </p>
           </div>
@@ -65,7 +65,7 @@ export function GuidesSection() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {guides.map((guide, index) => (
             <motion.article
-              key={index}
+              key={guide.title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -81,7 +81,7 @@ export function GuidesSection() {
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
-                
+
                 {/* Category Badge */}
                 <div className="absolute top-4 left-4">
                   <span className="px-3 py-1 text-xs font-medium rounded-full bg-primary/90 text-primary-foreground">
@@ -98,7 +98,7 @@ export function GuidesSection() {
                 <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
                   {guide.description}
                 </p>
-                
+
                 {/* Meta */}
                 <div className="flex items-center gap-4 text-xs text-muted-foreground">
                   <span className="flex items-center gap-1">

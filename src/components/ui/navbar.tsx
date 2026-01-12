@@ -1,14 +1,19 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Home, Grid3X3, BookOpen, Newspaper, Award, FileText, Calculator, Search } from "lucide-react";
+import { Menu, X, Home, Grid3X3, BookOpen, Newspaper, Award, FileText, Calculator, Search, User, LogIn, LogOut, Settings } from "lucide-react";
 import { Button } from "./button";
 import { SearchBar } from "@/components/search/SearchBar";
 import { SearchResult, SearchSuggestion } from "@/types/search";
+import { useAuthOptional } from "@/hooks/useAuth";
+import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
+import { logger } from "@/lib/logger";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./dropdown-menu";
 
 const navItems = [
   { name: "Главная", href: "/", icon: Home },
   { name: "Каталог", href: "/catalog", icon: Grid3X3 },
+  { name: "Админ", href: "/admin", icon: Settings },
   { name: "Калькулятор", href: "/calculator", icon: Calculator },
   { name: "Гайды", href: "/guides", icon: BookOpen },
   { name: "Новости", href: "/news", icon: Newspaper },
@@ -20,6 +25,12 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const navigate = useNavigate();
+  const auth = useAuthOptional();
+
+  // Если AuthProvider не доступен, используем значения по умолчанию
+  const isAuthenticated = auth?.isAuthenticated ?? false;
+  const authState = auth?.authState ?? { user: null, session: null, loading: false, error: null };
+  const signOut = auth?.signOut ?? (() => Promise.resolve());
 
   const handleSearch = (results: SearchResult[], query: string) => {
     navigate(`/search?q=${encodeURIComponent(query)}`);
@@ -33,6 +44,25 @@ export function Navbar() {
       navigate(`/search?q=${encodeURIComponent(suggestion.text)}`);
     }
     setShowSearch(false);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      navigate('/');
+    } catch (error) {
+      logger.error('Ошибка выхода:', error);
+    }
+  };
+
+  const getUserInitials = (name?: string, email?: string) => {
+    if (name) {
+      return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    }
+    if (email) {
+      return email[0].toUpperCase();
+    }
+    return 'U';
   };
 
   return (
@@ -60,7 +90,7 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* Search and CTA */}
+          {/* Search and Auth */}
           <div className="hidden md:flex items-center gap-4">
             {/* Search Toggle */}
             <Button
@@ -72,10 +102,60 @@ export function Navbar() {
               <Search className="w-4 h-4" />
               <span className="hidden lg:inline">Поиск</span>
             </Button>
-            
-            <Button variant="glow" size="sm">
-              Подписаться
-            </Button>
+
+            {/* Authentication */}
+            {isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={authState.user?.avatar_url} alt={authState.user?.full_name || authState.user?.email} />
+                      <AvatarFallback>
+                        {getUserInitials(authState.user?.full_name, authState.user?.email)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <div className="flex items-center justify-start gap-2 p-2">
+                    <div className="flex flex-col space-y-1 leading-none">
+                      {authState.user?.full_name && (
+                        <p className="font-medium">{authState.user.full_name}</p>
+                      )}
+                      <p className="w-[200px] truncate text-sm text-muted-foreground">
+                        {authState.user?.email}
+                      </p>
+                    </div>
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile" className="cursor-pointer">
+                      <User className="mr-2 h-4 w-4" />
+                      Профиль
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Выйти
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link to="/auth/login">
+                  <Button variant="ghost" size="sm" className="gap-2">
+                    <LogIn className="w-4 h-4" />
+                    Войти
+                  </Button>
+                </Link>
+                <Link to="/manage-subscription">
+                  <Button variant="glow" size="sm">
+                    Подписаться
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -137,7 +217,7 @@ export function Navbar() {
                   </Link>
                 </motion.div>
               ))}
-              
+
               {/* Mobile Search */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
@@ -158,10 +238,64 @@ export function Navbar() {
                   showPopular={false}
                 />
               </motion.div>
+
+              {/* Mobile Auth */}
+              {isAuthenticated ? (
+                <>
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: (navItems.length + 1) * 0.05 }}
+                  >
+                    <Link
+                      to="/profile"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 text-muted-foreground hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors"
+                    >
+                      <User className="w-5 h-5" />
+                      Профиль
+                    </Link>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: (navItems.length + 2) * 0.05 }}
+                  >
+                    <button
+                      onClick={() => {
+                        handleSignOut();
+                        setIsOpen(false);
+                      }}
+                      className="flex items-center gap-3 px-4 py-3 text-muted-foreground hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors w-full text-left"
+                    >
+                      <LogOut className="w-5 h-5" />
+                      Выйти
+                    </button>
+                  </motion.div>
+                </>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (navItems.length + 1) * 0.05 }}
+                >
+                  <Link
+                    to="/auth/login"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 text-muted-foreground hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors"
+                  >
+                    <LogIn className="w-5 h-5" />
+                    Войти
+                  </Link>
+                </motion.div>
+              )}
+
               <div className="pt-4">
-                <Button variant="glow" className="w-full">
-                  Подписаться
-                </Button>
+                <Link to="/manage-subscription">
+                  <Button variant="glow" className="w-full">
+                    Подписаться
+                  </Button>
+                </Link>
               </div>
             </div>
           </motion.div>

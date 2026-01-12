@@ -1,15 +1,15 @@
 import { motion } from "framer-motion";
-import { 
-  Plug, 
-  Lightbulb, 
-  Camera, 
-  Thermometer, 
-  Bell, 
-  Shield, 
-  Mic, 
-  Home, 
-  Lock, 
-  MoreHorizontal 
+import {
+  Plug,
+  Lightbulb,
+  Camera,
+  Thermometer,
+  Bell,
+  Shield,
+  Mic,
+  Home,
+  Lock,
+  MoreHorizontal
 } from "lucide-react";
 
 const categories = [
@@ -49,7 +49,7 @@ export function CategoriesSection() {
   return (
     <section className="py-24 relative">
       <div className="absolute inset-0 bg-hero-gradient opacity-50" />
-      
+
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <motion.div
@@ -64,7 +64,7 @@ export function CategoriesSection() {
             Категории <span className="text-gradient">устройств</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Более 400 устройств в 10 категориях. Сравнивайте цены, читайте обзоры, 
+            Более 400 устройств в 10 категориях. Сравнивайте цены, читайте обзоры,
             выбирайте лучшие решения для вашего умного дома
           </p>
         </motion.div>
@@ -77,9 +77,9 @@ export function CategoriesSection() {
           viewport={{ once: true }}
           className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"
         >
-          {categories.map((category, index) => (
+          {categories.map((category) => (
             <motion.a
-              key={index}
+              key={category.name}
               href={`/catalog/${category.name.toLowerCase().replace(/\s+/g, '-')}`}
               variants={itemVariants}
               whileHover={{ scale: 1.03, y: -5 }}
@@ -87,12 +87,12 @@ export function CategoriesSection() {
             >
               {/* Background Gradient on Hover */}
               <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
-              
+
               {/* Icon */}
               <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${category.color} p-2.5 mb-4 group-hover:shadow-lg group-hover:shadow-primary/20 transition-shadow`}>
                 <category.icon className="w-full h-full text-white" />
               </div>
-              
+
               {/* Content */}
               <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors mb-1">
                 {category.name}
@@ -100,7 +100,7 @@ export function CategoriesSection() {
               <p className="text-sm text-muted-foreground">
                 {category.count} устройств
               </p>
-              
+
               {/* Hover Arrow */}
               <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
                 <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">

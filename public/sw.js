@@ -1,4 +1,4 @@
-const CACHE_NAME = 'smart-home-mvp-v1';
+const CACHE_NAME = 'smart-home-mvp-v2';
 const STATIC_CACHE_NAME = 'smart-home-static-v1';
 const DYNAMIC_CACHE_NAME = 'smart-home-dynamic-v1';
 
@@ -45,9 +45,9 @@ self.addEventListener('activate', (event) => {
       .then((cacheNames) => {
         return Promise.all(
           cacheNames.map((cacheName) => {
-            if (cacheName !== STATIC_CACHE_NAME && 
-                cacheName !== DYNAMIC_CACHE_NAME &&
-                cacheName !== CACHE_NAME) {
+            if (cacheName !== STATIC_CACHE_NAME &&
+              cacheName !== DYNAMIC_CACHE_NAME &&
+              cacheName !== CACHE_NAME) {
               console.log('Deleting old cache:', cacheName);
               return caches.delete(cacheName);
             }
@@ -76,9 +76,14 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Handle different types of requests with appropriate strategies
+  if (isSupabaseRequest(request) || isAuthRequest(request)) {
+    // DO NOT cache auth or supabase requests
+    return;
+  }
+
   if (isStaticAsset(request)) {
-    // Cache First strategy for static assets
-    event.respondWith(cacheFirst(request, STATIC_CACHE_NAME));
+    // Stale While Revalidate strategy for static assets (better for updates)
+    event.respondWith(staleWhileRevalidate(request, STATIC_CACHE_NAME));
   } else if (isAPIRequest(request)) {
     // Network First strategy for API requests
     event.respondWith(networkFirst(request, DYNAMIC_CACHE_NAME));
@@ -92,11 +97,21 @@ self.addEventListener('fetch', (event) => {
 });
 
 // Helper functions
+function isSupabaseRequest(request) {
+  return request.url.includes('supabase.co');
+}
+
+function isAuthRequest(request) {
+  const url = new URL(request.url);
+  return url.pathname.includes('/auth/') ||
+    request.headers.get('Authorization') ||
+    url.pathname.includes('/rest/v1/');
+}
 function isStaticAsset(request) {
   const url = new URL(request.url);
   return url.pathname.match(/\.(js|css|woff2?|ttf|eot)$/) ||
-         url.pathname === '/' ||
-         url.pathname === '/index.html';
+    url.pathname === '/' ||
+    url.pathname === '/index.html';
 }
 
 function isAPIRequest(request) {
@@ -114,11 +129,11 @@ async function cacheFirst(request, cacheName) {
   try {
     const cache = await caches.open(cacheName);
     const cachedResponse = await cache.match(request);
-    
+
     if (cachedResponse) {
       return cachedResponse;
     }
-    
+
     const networkResponse = await fetch(request);
     if (networkResponse.ok) {
       cache.put(request, networkResponse.clone());
@@ -142,11 +157,11 @@ async function networkFirst(request, cacheName) {
     console.log('Network failed, trying cache:', error);
     const cache = await caches.open(cacheName);
     const cachedResponse = await cache.match(request);
-    
+
     if (cachedResponse) {
       return cachedResponse;
     }
-    
+
     return new Response('Content not available offline', { status: 503 });
   }
 }
@@ -154,17 +169,21 @@ async function networkFirst(request, cacheName) {
 async function staleWhileRevalidate(request, cacheName) {
   const cache = await caches.open(cacheName);
   const cachedResponse = await cache.match(request);
-  
+
   const fetchPromise = fetch(request).then((networkResponse) => {
-    if (networkResponse.ok) {
+    if (networkResponse && networkResponse.ok) {
       cache.put(request, networkResponse.clone());
     }
     return networkResponse;
   }).catch(() => {
-    // Network failed, return cached version if available
-    return cachedResponse;
+    // If network fails, we'll try to return the cached response
+    // if it exists, otherwise we must return a valid Response
+    return cachedResponse || new Response('Network error occurred and no cached content available', {
+      status: 503,
+      headers: { 'Content-Type': 'text/plain' }
+    });
   });
-  
+
   return cachedResponse || fetchPromise;
 }
 
@@ -190,7 +209,7 @@ self.addEventListener('push', (event) => {
       badge: '/favicon.ico',
       data: data.data
     };
-    
+
     event.waitUntil(
       self.registration.showNotification(data.title, options)
     );
@@ -200,8 +219,15 @@ self.addEventListener('push', (event) => {
 // Handle notification clicks
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  
+
   event.waitUntil(
     clients.openWindow(event.notification.data?.url || '/')
   );
+});
+
+// Handle messages from the client (for skip waiting)
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });

@@ -4,15 +4,17 @@ import { motion } from 'framer-motion';
 import { SearchBar } from '@/components/search/SearchBar';
 import { SearchResults } from '@/components/search/SearchResults';
 import { SearchResult, SearchSuggestion } from '@/types/search';
-import { 
-  searchProducts, 
-  searchArticles, 
-  searchNews, 
+import { SEOHead } from '@/components/seo/SEOHead';
+import {
+  searchProducts,
+  searchArticles,
+  searchNews,
   searchRatings,
-  saveSearchToHistory 
+  saveSearchToHistory
 } from '@/lib/searchUtils';
 import { products } from '@/data/products';
 import { mockArticles, mockNews, mockRatings } from '@/data/mockContent';
+import { logger } from '@/lib/logger';
 
 export default function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -64,7 +66,7 @@ export default function Search() {
       // Сохраняем в историю поиска
       saveSearchToHistory(query, allResults.length);
     } catch (error) {
-      console.error('Search error:', error);
+      logger.error('Search error:', error);
       setResults([]);
     } finally {
       setIsLoading(false);
@@ -88,11 +90,16 @@ export default function Search() {
 
   const handleResultClick = (result: SearchResult) => {
     // Здесь можно добавить аналитику кликов
-    console.log('Result clicked:', result);
+    logger.log('Result clicked:', result);
   };
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title={currentQuery ? `Поиск: ${currentQuery}` : "Поиск по сайту"}
+        description="Найдите нужные устройства умного дома, обзоры, гайды и новости в Smart Home 2026."
+        keywords={['поиск умного дома', 'найти гаджеты', 'каталог iot поиск']}
+      />
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
         <div className="container mx-auto px-4 py-4">
@@ -103,7 +110,7 @@ export default function Search() {
                 Smart Home 2026
               </a>
             </div>
-            
+
             {/* Search Bar */}
             <div className="flex-1 max-w-2xl">
               <SearchBar
@@ -113,7 +120,7 @@ export default function Search() {
                 showPopular={!currentQuery}
               />
             </div>
-            
+
             {/* Navigation */}
             <nav className="hidden md:flex items-center gap-4">
               <a href="/catalog" className="text-sm hover:text-primary transition-colors">
@@ -169,10 +176,10 @@ export default function Search() {
                   Поиск по Smart Home 2026
                 </h1>
                 <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-                  Найдите нужные товары, статьи, новости и рейтинги. 
+                  Найдите нужные товары, статьи, новости и рейтинги.
                   Используйте поиск выше или выберите популярные запросы.
                 </p>
-                
+
                 {/* Популярные категории */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
                   {[

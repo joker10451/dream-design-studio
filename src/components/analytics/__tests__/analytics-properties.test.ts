@@ -62,7 +62,7 @@ describe('Analytics Property Tests', () => {
                 item_id: fc.string({ minLength: 1, maxLength: 50 }),
                 item_name: fc.string({ minLength: 1, maxLength: 100 }),
                 item_category: fc.string({ minLength: 1, maxLength: 50 }),
-                price: fc.float({ min: 0, max: 1000000 }),
+                price: fc.float({ min: Math.fround(0), max: Math.fround(1000000) }).filter(n => !isNaN(n) && isFinite(n)),
                 currency: fc.constant('RUB'),
               }),
             }),
@@ -73,7 +73,7 @@ describe('Analytics Property Tests', () => {
                 item_id: fc.string({ minLength: 1, maxLength: 50 }),
                 item_name: fc.string({ minLength: 1, maxLength: 100 }),
                 marketplace: fc.constantFrom('wildberries', 'ozon', 'yandex_market'),
-                price: fc.float({ min: 0, max: 1000000 }),
+                price: fc.float({ min: Math.fround(0), max: Math.fround(1000000) }).filter(n => !isNaN(n) && isFinite(n)),
                 currency: fc.constant('RUB'),
                 affiliate_url: fc.webUrl(),
               }),
@@ -107,7 +107,7 @@ describe('Analytics Property Tests', () => {
             fc.record({
               name: fc.constant('calculator_use'),
               parameters: fc.record({
-                total_cost: fc.float({ min: 0, max: 10000000 }),
+                total_cost: fc.float({ min: Math.fround(0), max: Math.fround(10000000) }).filter(n => !isNaN(n) && isFinite(n)),
                 items_count: fc.integer({ min: 1, max: 100 }),
                 currency: fc.constant('RUB'),
               }),

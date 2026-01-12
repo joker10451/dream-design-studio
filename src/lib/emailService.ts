@@ -159,9 +159,9 @@ class MailChimpService implements EmailService {
   private baseUrl: string;
 
   constructor() {
-    this.apiKey = process.env.NEXT_PUBLIC_MAILCHIMP_API_KEY || process.env.MAILCHIMP_API_KEY || '';
-    this.audienceId = process.env.NEXT_PUBLIC_MAILCHIMP_AUDIENCE_ID || process.env.MAILCHIMP_AUDIENCE_ID || '';
-    this.serverPrefix = process.env.NEXT_PUBLIC_MAILCHIMP_SERVER_PREFIX || process.env.MAILCHIMP_SERVER_PREFIX || 'us1';
+    this.apiKey = import.meta.env.VITE_MAILCHIMP_API_KEY || '';
+    this.audienceId = import.meta.env.VITE_MAILCHIMP_AUDIENCE_ID || '';
+    this.serverPrefix = import.meta.env.VITE_MAILCHIMP_SERVER_PREFIX || 'us1';
     this.baseUrl = `https://${this.serverPrefix}.api.mailchimp.com/3.0`;
   }
 
@@ -342,7 +342,7 @@ class MailChimpService implements EmailService {
 
 // Фабрика для создания email сервиса
 export function createEmailService(): EmailService {
-  const serviceType = process.env.NEXT_PUBLIC_EMAIL_SERVICE || process.env.EMAIL_SERVICE || 'mock';
+  const serviceType = import.meta.env.VITE_EMAIL_SERVICE || 'mock';
   
   switch (serviceType) {
     case 'mailchimp':
