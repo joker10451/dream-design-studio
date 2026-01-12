@@ -1,13 +1,17 @@
 {
-  "name": "Smart Home 2026 - Умный дом портал",
-  "short_name": "Smart Home 2026",
-  "description": "Информационно-коммерческий портал по устройствам и системам умного дома для российского рынка",
+  "name": "Schitay Online - Читай онлайн",
+  "short_name": "Schitay Online",
+  "description": "Портал для чтения онлайн",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
   "orientation": "portrait-primary",
-  "categories": ["shopping", "lifestyle", "productivity"],
+  "categories": [
+    "education",
+    "lifestyle",
+    "productivity"
+  ],
   "lang": "ru",
   "dir": "ltr",
   "icons": [
@@ -17,43 +21,25 @@
       "type": "image/x-icon"
     },
     {
-      "src": "/placeholder.svg",
+      "src": "/pwa-192x192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "/placeholder.svg",
+      "src": "/pwa-512x512.png",
       "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     }
   ],
   "shortcuts": [
-    {
-      "name": "Каталог устройств",
-      "short_name": "Каталог",
-      "description": "Просмотр каталога устройств умного дома",
-      "url": "/catalog",
-      "icons": [
-        {
-          "src": "/placeholder.svg",
-          "sizes": "192x192"
-        }
-      ]
-    },
-    {
-      "name": "Калькулятор стоимости",
-      "short_name": "Калькулятор",
-      "description": "Расчет стоимости системы умного дома",
-      "url": "/calculator",
-      "icons": [
-        {
-          "src": "/placeholder.svg",
-          "sizes": "192x192"
-        }
-      ]
-    },
     {
       "name": "Поиск",
       "short_name": "Поиск",
@@ -61,7 +47,7 @@
       "url": "/search",
       "icons": [
         {
-          "src": "/placeholder.svg",
+          "src": "/icon.svg",
           "sizes": "192x192"
         }
       ]
